@@ -1,11 +1,16 @@
-import React,{useState} from 'react';
-import {StyleSheet, View, TouchableOpacity, Text, Dimensions} from 'react-native';
+import React, {useState} from 'react';
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Text,
+  Dimensions,
+} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import ImagePreview from '../../../conments/ImagePreview';
 
 const OrderDetailMenu = (props) => {
-
-    let {style ={},next,index,total,data,exit} =props;
+    let {style ={},next,index,total,data,exit} = props;
 
     const [imagePreviewVisible,setImagePreviewVisible] = useState(false);
     const [imageUrl,setImageUrl] = useState([])
@@ -16,14 +21,22 @@ const OrderDetailMenu = (props) => {
     }
 
     let previewImage = () => {
-        setImageUrl([{url:'https://app.sunhingprinting.com/files/250473.jpg'}])
+        let url;
+        if (data.productpic !== null){
+            url = data.productpic.slice(3)
+        }else {
+            url = 'notfind.jpg'
+        }
+        setImageUrl([{url:`https://app.sunhingprinting.com/files/${url}`}])
         setImagePreviewVisible(true)
     }
 
     let previewPdf = () => {
-        let path,path1,url = "";
-        path = encodeURIComponent("H:/test/250473.pdf");
-        path1 = encodeURIComponent("H:/test/250473.jpg");
+        let path,path1,url;
+        console.log(data.productpic);
+        console.log(data.pdffile);
+        path = encodeURIComponent(`${data.pdffile}`);
+        path1 = encodeURIComponent(`${data.productpic}`);
         url = `https://app.sunhingprinting.com/printing/user/syRightuser/manage/savetpW?path=${path}&path1=${path1}`;
         setImageUrl([{url}])
         setImagePreviewVisible(true)

@@ -30,9 +30,6 @@ const AppRouter = (props) => {
                 <Scene key="materiel" component={Materiel} onExit={props.clearMateriel} hideNavBar={true} />
                 <Scene key="produce" component={Produce} onExit={props.clearProduce} hideNavBar={true} />
                 <Scene key="purchase" component={Purchase} onExit={props.clearPurchase} hideNavBar={true} />
-                {/* 电影列表的路由规则 */}
-                {/*<Scene key="movielist" component={MovieList} title="热映电影列表" />*/}
-                {/*<Scene key="moviedetail" component={MovieDetail} title="电影详情" />*/}
             </Stack>
         </Router>
     )

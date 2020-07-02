@@ -4,13 +4,13 @@ import Search from '../../../conments/Search';
 
 const ProduceForm = (props) => {
 
-    let {prjid,custno,custpo,setValue,setParam,search,reset} = props;
+    let {prjid,custno,custpo,setValue,search,reset} = props;
 
     const [searchVisible,setSearchVisible] = useState(false)
 
     let setCustno = (value) => {
         setSearchVisible(false)
-        setParam('custno',value)
+        setValue('custno',value)
     }
 
     return (
@@ -37,7 +37,7 @@ const ProduceForm = (props) => {
                         style={{flex:1,height: 36,fontSize:12,textAlignVertical:"center",padding:0}}
                         placeholder={'PO條件'}
                         value={custpo}
-                        onChangeText={(value) => setValue('custno',value)}
+                        onChangeText={(value) => setValue('custpo',value)}
                     />
                 </View>
             </View>

@@ -31,7 +31,7 @@ const OrderTable = (props) => {
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
                     <Text style={{fontSize:12,color:'#333'}}>{item.item.prjid}</Text>
                 </View>
-                <View style={[styles.orderTabLeftItem,{height:100,paddingLeft:4,paddingRight:4}]}>
+                <View style={[styles.orderTabLeftItem,{height:100,paddingLeft:4,paddingRight:4,justifyContent: 'flex-start'}]}>
                     <Text style={{fontSize:12,color:'#333'}}>{item.item.name}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
@@ -41,10 +41,10 @@ const OrderTable = (props) => {
                     <Text style={{fontSize:12,color:'#333'}}>{item.item.custpo}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
-                    <Text style={{fontSize:12,color:'#333'}}>{item.item.orderqty?item.item.orderqty.toLocaleString():0}</Text>
+                    <Text style={{fontSize:12,color:'#333'}}>{item.item.orderqty?format(item.item.orderqty):0}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
-                    <Text style={{fontSize:12,color:'#333'}}>{item.item.madeqty?item.item.madeqty.toLocaleString():0}</Text>
+                    <Text style={{fontSize:12,color:'#333'}}>{item.item.madeqty?format(item.item.madeqty):0}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
                     <Text style={{fontSize:12,color:'#333'}}>{item.item.shipdate}</Text>
@@ -59,6 +59,15 @@ const OrderTable = (props) => {
         )
     }
 
+    let format = (input) => {
+        let n = parseFloat(input).toFixed(2);
+
+        let re = /(\d{1,3})(?=(\d{3})+(?:\.))/g;
+
+        let res = n.replace(re, "$1,");
+
+        return res.slice(0,res.length - 3);
+    }
 
     let tabHeader = ['開單日期','工程單','貨品名稱','類別','PO NO.','訂單數','入庫數','交貨期','狀況','選擇要看'];
 

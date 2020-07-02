@@ -1,36 +1,44 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { View, StyleSheet, Text, TouchableOpacity,FlatList } from 'react-native';
 import { Actions } from 'react-native-router-flux'
 
 const ProduceTable = (props) => {
 
-    let { data, changeIndex, index = 0, loadMore } = props;
+    let { data, changeIndex, index = 0, loadMore, enableScroll} = props;
 
     let toMateriel = () => {
         Actions.materiel({ prjid: data[index].prjid })
     }
 
-    let renderProduceList = (item) => {
+    const [canLoadMore,setCanLoadMore] = useState(false)
 
+    let renderProduceList = (item) => {
         return (
             <TouchableOpacity onPress={() => { changeIndex(index) }} key={index} style={{ flexDirection: 'row' }}>
                 <View style={[styles.produceTableCellItem, { width: 110,borderLeftWidth: 1 }]} >
                     <Text style={{ fontSize: 10, color: '#333' }}>{item.item.wpdesciption}</Text>
                 </View>
                 <View style={[styles.produceTableCellItem, { flex: 1, backgroundColor: '#EBD199' }]} >
-                    <Text style={{ fontSize: 10, color: '#333' }}>{item.item.todoqty}</Text>
+                    <Text style={{ fontSize: 10, color: '#333' }}>{format(item.item.todoqty)}</Text>
                 </View>
                 <View style={[styles.produceTableCellItem, { flex: 1, backgroundColor: '#91E9BD' }]} >
-                    <Text style={{ fontSize: 10, color: '#333' }}>{item.item.doneqty}</Text>
+                    <Text style={{ fontSize: 10, color: '#333' }}>{format(item.item.doneqty)}</Text>
                 </View>
                 <View style={[styles.produceTableCellItem, { flex: 1,color: item.item.resqty >= 0 ? '#333' : '#F00' }]} >
-                    <Text style={{ fontSize: 10, color: '#333' }}>{item.item.resqty}</Text>
+                    <Text style={{ fontSize: 10, color: 'red' }}>{format(item.item.resqty)}</Text>
                 </View>
                 <View style={[styles.produceTableCellItem, { flex: 1 }]} >
                     <Text style={{ fontSize: 10, color: item.item.resqty >= 0 ? '#333' : '#F00' }}>{item.item.resqty >= 0 ? '達標' : '未達標'}</Text>
                 </View>
             </TouchableOpacity>
         )
+    }
+
+    let format = (input) => {
+        let n = parseFloat(input).toFixed(2);
+        let re = /(\d{1,3})(?=(\d{3})+(?:\.))/g;
+        let res = n.replace(re, "$1,");
+        return res.slice(0,res.length - 3);
     }
 
     return (
@@ -54,15 +62,30 @@ const ProduceTable = (props) => {
                             <Text style={{ fontSize: 12, color: '#333' }}>狀況</Text>
                         </View>
                     </View>
-                    <FlatList
-                        data={data}
-                        renderItem={renderProduceList}
-                        keyExtractor={(item, index) => index.toString()}
-                        showsHorizontalScrollIndicator={false}
-                        bounces={false}
-                        onEndReached={loadMore}
-                        onEndReachedThreshold={0.2}
-                    />
+                    <View
+                        style={{ height:200}}
+                        onStartShouldSetResponderCapture={enableScroll}>
+                        <FlatList
+                            data={data}
+                            renderItem={renderProduceList}
+                            keyExtractor={(item, index) => index.toString()}
+                            showsHorizontalScrollIndicator={false}
+                            bounces={false}
+                            horizontal={false}
+                            onEndReached={() => {
+                                setTimeout(() => {
+                                    if (canLoadMore) {
+                                        loadMore()
+                                        setCanLoadMore(false)
+                                    }
+                                }, 100)
+                            }}
+                            onEndReachedThreshold={0.5}
+                            onMomentumScrollBegin={() => {
+                                setCanLoadMore(true)
+                            }}
+                        />
+                    </View>
                 </View>
             </View>
             <View style={{ flexDirection: 'row', marginTop: 10,justifyContent:"center" }}>
@@ -71,7 +94,6 @@ const ProduceTable = (props) => {
                 </TouchableOpacity>
             </View>
         </View>
-
     )
 
 
@@ -79,7 +101,6 @@ const ProduceTable = (props) => {
 
 const styles = StyleSheet.create({
     produceTable: {
-        height:430,
         borderTopWidth: 1,
         borderColor: '#666',
     },

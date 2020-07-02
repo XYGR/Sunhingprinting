@@ -25,6 +25,7 @@ class PurchaseForm extends Component {
     }
 
     setType = (itemValue,index) => {
+        console.log(itemValue)
         this.setState({
             type:itemValue,
             typeIndex:index
@@ -58,7 +59,8 @@ class PurchaseForm extends Component {
             vname,
             description,
             startDate,
-            endDate
+            endDate,
+            mtypeno:type
         }
         let keys = Object.keys(params);
         keys.forEach((key)=>{

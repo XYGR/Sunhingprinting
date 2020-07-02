@@ -30,13 +30,13 @@ const PurchaseTable = (props) => {
                     <Text style={{fontSize:12,color:'#333'}}>{item.item.plandate}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
-                    <Text style={{fontSize:12,color:'#333'}}>{item.item.purqty}</Text>
+                    <Text style={{fontSize:12,color:'#333'}}>{format(item.item.purqty)}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
-                    <Text style={{fontSize:12,color:'#333'}}>{item.item.factqty}</Text>
+                    <Text style={{fontSize:12,color:'#333'}}>{format(item.item.factqty)}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
-                    <Text style={{fontSize:12,color:'#333'}}>{item.item.purqty - item.item.factqty}</Text>
+                    <Text style={{fontSize:12,color:'#333'}}>{format(item.item.purqty - item.item.factqty)}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:60}]}>
                     <Text style={{fontSize:12,color:'#333'}}>{item.item.vname}</Text>
@@ -52,6 +52,16 @@ const PurchaseTable = (props) => {
         )
     }
 
+    let format = (input) => {
+        let n = parseFloat(input).toFixed(2);
+
+        let re = /(\d{1,3})(?=(\d{3})+(?:\.))/g;
+
+        let res = n.replace(re, "$1,");
+
+        return res.slice(0,res.length - 3);
+    }
+
     let tabHeader = ['採購訂單','貨品編號','類別','物料描述','下單日期','預交日期','訂單數','已交貨數','未交貨數','供應商','收貨明细']
 
     return (
@@ -60,7 +70,7 @@ const PurchaseTable = (props) => {
                 {
                     tabHeader.map((item,index) => {
                         return (
-                            <View key={index} 
+                            <View key={index}
                                 style={[styles.orderTabLeftItem,
                                     {height:index === 3?70:(index === 9?60:30)},
                                     {borderTopWidth:index === 0?1:0 }
@@ -102,7 +112,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderBottomWidth:1,
-        borderColor:'#666'
+        borderColor:'#666',
+        overflow:'hidden'
     },
     orderTabListItem:{
         width:110,

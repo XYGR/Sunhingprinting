@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {StyleSheet, ScrollView} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import {connect} from 'react-redux'
 
 import Header from '../../conments/Header';
@@ -18,7 +18,8 @@ class Produce extends Component{
             custno:'',
             pageNo:1,
             pageSize:10,
-            choiceIndex:0
+            choiceIndex:0,
+            scrollEnabled:true
         }
     }
 
@@ -60,7 +61,7 @@ class Produce extends Component{
         })
     }
 
-    setParam = (key,value) => {
+    setValue = (key,value) => {
         this.setState({
             [key]:value
         })
@@ -80,28 +81,29 @@ class Produce extends Component{
     }
 
     render() {
-        let {prjid,custno,custpo,choiceIndex} = this.state;
+        let {prjid,custno,custpo,choiceIndex,scrollEnabled} = this.state;
         let {data} = this.props.produceList
         return (
-            <ScrollView stickyHeaderIndices={[0]} bounces={false}>
-                <Header title={'生產進度查詢'}  />
-                <ProduceForm prjid={prjid} custno={custno} custpo={custpo} setParam={this.setParam} search={this.search} reset={this.reset} />
-                <ProduceDetail data={data[choiceIndex]?data[choiceIndex]:null} />
-                <ProduceTable
-                    data={data}
-                    changeIndex={(index)=>{this.setState({choiceIndex:index})}}
-                    index={choiceIndex}
-                    loadMore={this.loadMore}
-                />
-            </ScrollView>
+            <View onStartShouldSetResponderCapture={() => {
+                this.setState({ scrollEnabled: true });
+            }}>
+                <ScrollView stickyHeaderIndices={[0]} bounces={false} scrollEnabled={scrollEnabled}>
+                    <Header title={'生產進度查詢'}  />
+                    <ProduceForm prjid={prjid} custno={custno} custpo={custpo} setValue={this.setValue} search={this.search} reset={this.reset} />
+                    <ProduceDetail data={data[choiceIndex]?data[choiceIndex]:null} />
+                    <ProduceTable
+                        data={data}
+                        changeIndex={(index)=>{this.setState({choiceIndex:index})}}
+                        index={choiceIndex}
+                        loadMore={this.loadMore}
+                        enableScroll={()=>{this.setState({scrollEnabled:false})}}
+                    />
+                </ScrollView>
+            </View>
         )
     }
 
 }
-
-const styles = StyleSheet.create({
-
-})
 
 const mapStateToProps = (state) => ({
     produceList: state.produce.produceList

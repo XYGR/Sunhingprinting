@@ -6,16 +6,19 @@ import Header from '../../conments/Header';
 import PurchaseForm from './children/PurchaseForm';
 import PurchaseTable from './children/PurchaseTable';
 import PurchaseDetail from './children/PurchaseDetail';
-import {requirePurchaseList} from '../../store/modules/purchase';
+import {
+  requirePurchaseList,
+  clearPurchaseState,
+} from '../../store/modules/purchase';
 
-class Purchase extends Component{
+class Purchase extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             type:'01',
             typeIndex:0,
-            filterIndex:0,
+            filterIndex:1,
             params:{},
             pageNo:1,
             pageSize:10,
@@ -30,15 +33,15 @@ class Purchase extends Component{
     }
 
     beforeSearch = (params) => {
+        this.props.clearPurchase()
         this.setState({
             params
         },this.search)
     }
 
     search = () => {
-        let {params,pageNo,pageSize,type} = this.state;
+        let {params,pageNo,pageSize} = this.state;
         let {data} = this.props.purchaseList;
-        params.mtypeno = type;
         this.props.getPurchaseList({pageNo,pageSize},params,data)
     }
 
@@ -106,7 +109,7 @@ class Purchase extends Component{
                     </View>
                 </View>
                 <PurchaseTable data={filterData} index={detailIndex} loadMore={this.loadMore} setDetailIndex={this.setDetailIndex} />
-                <PurchaseDetail list={filterData.length?filterData[detailIndex].poInspdetailList:[]} />
+                <PurchaseDetail list={filterData.length?filterData[detailIndex].poInspdetailList:[]} description={filterData.length?filterData[detailIndex].description:''} />
             </ScrollView>
         )
     }
@@ -118,8 +121,12 @@ const mapStateToProps = (state) => ({
 })
 const mapDispatchToProps = (dispatch) => ({
     getPurchaseList(query,params,oldList){
-        console.log(params)
+        // console.log(params)
         let action = requirePurchaseList(query,params,oldList);
+        dispatch(action)
+    },
+    clearPurchase(){
+        let action = clearPurchaseState();
         dispatch(action)
     }
 })

@@ -6,13 +6,24 @@ const MaterielTable = (props) => {
 
     let {data = [],style = {},loadMore,index,setDetailIndex} = props;
     let renderOrderList = (item) => {
+        let type = {
+            '01':'咭紙',
+            '02':'坑紙',
+            '03':'輔料',
+            '04':'膠片',
+            '06':'紙箱',
+            '07':'客料',
+            '08':'配件',
+            '09':'外發加工',
+            '10':'成品'
+        }
         return (
             <View style={styles.orderTabListItem}>
                 <View style={[styles.orderTabLeftItem,{height:30,borderTopWidth:1}]}>
                     <Text style={{fontSize:12,color:'#333'}}>{item.item.prjid}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
-                    <Text style={{fontSize:12,color:'#333'}}>{item.item.mtypeno}</Text>
+                    <Text style={{fontSize:12,color:'#333'}}>{type[item.item.mtypeno]}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
                     <Text style={{fontSize:12,color:'#333'}}>{item.item.partno}</Text>
@@ -21,13 +32,13 @@ const MaterielTable = (props) => {
                     <Text style={{fontSize:12,color:'#333'}}>{item.item.name}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
-                    <Text style={{fontSize:12,color:'#333'}}>{item.item.todoqty}</Text>
+                    <Text style={{fontSize:12,color:'#333'}}>{format(item.item.todoqty)}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
-                    <Text style={{fontSize:12,color:'#333'}}>{item.item.doneqty}</Text>
+                    <Text style={{fontSize:12,color:'#333'}}>{format(item.item.doneqty)}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
-                    <Text style={{fontSize:12,color:'#333'}}>{item.item.paperdoneqty}</Text>
+                    <Text style={{fontSize:12,color:'#333'}}>{format(item.item.paperdoneqty)}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
                     <Text style={{fontSize:12,color:'#333'}}>{item.item.custpo}</Text>
@@ -36,13 +47,13 @@ const MaterielTable = (props) => {
                     <Text style={{fontSize:12,color:'#333'}}>{item.item.vname}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
-                    <Text style={{fontSize:12,color:'#333'}}>{item.item.purqty}</Text>
+                    <Text style={{fontSize:12,color:'#333'}}>{format(item.item.purqty)}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
-                    <Text style={{fontSize:12,color:'#333'}}>{item.item.factqty}</Text>
+                    <Text style={{fontSize:12,color:'#333'}}>{format(item.item.factqty)}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
-                    <Text style={{fontSize:12,color:'#333'}}>{item.item.purqty - item.item.factqty}</Text>
+                    <Text style={{fontSize:12,color:'red'}}>{format(item.item.purqty - item.item.factqty)}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
                     <Text style={{fontSize:12,color:'#333'}}>{item.item.purdate}</Text>
@@ -59,6 +70,16 @@ const MaterielTable = (props) => {
                 </TouchableOpacity>
             </View>
         )
+    }
+
+    let format = (input) => {
+        let n = parseFloat(input).toFixed(2);
+
+        let re = /(\d{1,3})(?=(\d{3})+(?:\.))/g;
+
+        let res = n.replace(re, "$1,");
+
+        return res.slice(0,res.length - 3);
     }
 
     let tabHeader = ['工程單','類別','序號','物料','定量','已切數','計劃數','PONO','供應商','訂單數','已收貨數','未交貨數','下單日期','預交日期','收貨明细']

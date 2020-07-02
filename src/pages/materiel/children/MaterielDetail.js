@@ -6,6 +6,13 @@ const MaterielDetail = (props) => {
 
     let {list = []} = props
 
+    let format = (input) => {
+        let n = parseFloat(input).toFixed(2);
+        let re = /(\d{1,3})(?=(\d{3})+(?:\.))/g;
+        let res = n.replace(re, "$1,");
+        return res.slice(0,res.length - 3);
+    }
+
     return (
         <View style={styles.materielDetail}>
             <View style={{height:30,flexDirection:'row',backgroundColor:'#9ED2EF'}}>
@@ -33,10 +40,10 @@ const MaterielDetail = (props) => {
                                 <Text style={styles.materielDetailItemText}>{item.prodDate}</Text>
                             </View>
                             <View style={styles.materielDetailItem}>
-                                <Text style={styles.materielDetailItemText}>{item.inspqty}</Text>
+                                <Text style={styles.materielDetailItemText}>{format(item.inspqty)}</Text>
                             </View>
                             <View style={styles.materielDetailItem}>
-                                <Text style={styles.materielDetailItemText}>{item.inspqty - item.secqty}</Text>
+                                <Text style={[styles.materielDetailItemText,{color: 'red'}]}>{format(item.inspqty - item.secqty)}</Text>
                             </View>
                         </View>
                     )

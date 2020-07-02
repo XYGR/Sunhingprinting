@@ -59,7 +59,7 @@ export const requireOrderList = (query = {},params = {},oldList = []) => async (
             return false
         }
 
-        let filterDate = result.list.map(({prjid,prjdate,name,cdProtypeName,custpo,orderqty,madeqty,shipdate,state,status,prjendflag})=>{
+        let filterDate = result.list.map(({prjid,prjdate,name,cdProtypeName,custpo,orderqty,madeqty,shipdate,state,status,prjendflag,productpic,pdffile})=>{
             return {
                 prjid,
                 prjdate:prjdate?prjdate.split(" ")[0]:'',
@@ -71,7 +71,9 @@ export const requireOrderList = (query = {},params = {},oldList = []) => async (
                 shipdate:shipdate?shipdate.split(" ")[0]:'',
                 state,
                 status,
-                prjendflag
+                prjendflag,
+                productpic,
+                pdffile
             }
         })
         let data = oldList.concat(filterDate);
