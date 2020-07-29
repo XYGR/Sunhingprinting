@@ -28,17 +28,17 @@ const MaterielForm = (props) => {
                     />
                 </View>
             </View>
-            <View style={[styles.formCell,{marginBottom:10}]}>
-                <View style={styles.formLabel}>
-                    <Text style={{color:'#333',fontSize:14}}>客戶代號</Text>
-                </View>
-                <TouchableOpacity
-                    style={{flex:1,height: 36,justifyContent:'center',backgroundColor:'#EEE',borderColor: '#999', borderWidth: 1,borderRadius:10,paddingLeft:15}}
-                    onPress={()=>{setSearchVisible(true)}}
-                >
-                    <Text style={{fontSize:12,color:'#333'}}>{custno}</Text>
-                </TouchableOpacity>
-            </View>
+            {/*<View style={[styles.formCell,{marginBottom:10}]}>*/}
+            {/*    <View style={styles.formLabel}>*/}
+            {/*        <Text style={{color:'#333',fontSize:14}}>客戶代號</Text>*/}
+            {/*    </View>*/}
+            {/*    <TouchableOpacity*/}
+            {/*        style={{flex:1,height: 36,justifyContent:'center',backgroundColor:'#EEE',borderColor: '#999', borderWidth: 1,borderRadius:10,paddingLeft:15}}*/}
+            {/*        onPress={()=>{setSearchVisible(true)}}*/}
+            {/*    >*/}
+            {/*        <Text style={{fontSize:12,color:'#333'}}>{custno}</Text>*/}
+            {/*    </TouchableOpacity>*/}
+            {/*</View>*/}
             <View style={[styles.formCell]}>
                 <View style={styles.formLabel}>
                     <Text style={{color:'#333',fontSize:14}}>客戶PO</Text>

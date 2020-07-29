@@ -1,12 +1,9 @@
 import api from '../../utils/api';
-import {queryPost} from '../../utils/axios';
+import {post} from '../../utils/axios';
 
 //initialState
 const initialState = {
-    materielList:{
-        data:[],
-        pages:[]
-    },
+    materielList:[]
 }
 
 // types
@@ -39,43 +36,31 @@ const clearState = (value) => ({
 })
 
 // 异步action
-export const requireMaterielList = (query = {},params = {}) => async (dispatch) => {
-
+export const requireMaterielList = (params = {}) => async (dispatch) => {
     try {
-        let result = await queryPost(api.MATERIEL_LIST,query,params);
+        let result = await post(api.MATERIEL_LIST,params);
         if (!result){
             return false
         }
+        // console.log(JSON.stringify(result))
+        let filterDate = result.map(({fid,prjid,mtypeno,partno,name1,todoqty,donedqty,paperdoneqty,pono,vendorno,purqty,factqty,purdate,plandate}) => ({
+            fid,
+            prjid:prjid.trim(),
+            mtypeno,
+            partno,
+            name1:name1.trim(),
+            todoqty,
+            donedqty,
+            paperdoneqty,
+            pono:pono.trim(),
+            vendorno:vendorno.trim(),
+            purqty,
+            factqty:factqty,
+            purdate:purdate?purdate.split(" ")[0]:'',
+            plandate:plandate?plandate.split(" ")[0]:''
+        }))
 
-        let filterDate = result.list.map((
-            {prjid,mtypeno,partno,name,todoqty,doneqty,paperdoneqty,custpo,vname,purqty,factqty,purdate,plandate}
-            )=>{
-            return {
-                prjid:prjid.trim(),
-                mtypeno,
-                partno,
-                name,
-                todoqty,
-                doneqty,
-                paperdoneqty,
-                custpo,
-                vname,
-                purqty:purqty?purqty:0,
-                factqty:factqty?factqty:0,
-                purdate,
-                plandate,
-            }
-        })
-
-        result.list.forEach((ele,index) => {
-            let poInspdetailList = [];
-            ele.poOrderDetailList.forEach(element => {
-                poInspdetailList.concat(element.poInspdetail)
-            })
-            filterDate[index].poInspdetailList = poInspdetailList
-        });
-
-        dispatch(setMaterielList({data: filterDate,pages:result.pages}))
+        dispatch(setMaterielList(filterDate))
     }catch (e) {
         console.error(e)
     }

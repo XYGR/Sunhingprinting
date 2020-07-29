@@ -12,12 +12,12 @@ import purchase from './modules/purchase';
 // 合并reducer
 
 const reducer = combineReducers({
-    user,
-    order,
-    produce,
-    materiel,
-    purchase
-})
+  user,
+  order,
+  produce,
+  materiel,
+  purchase,
+});
 
 // 导出
 export default createStore(reducer, applyMiddleware(thunk));

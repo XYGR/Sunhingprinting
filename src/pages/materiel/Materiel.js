@@ -5,7 +5,6 @@ import {connect} from 'react-redux';
 import Header from '../../conments/Header';
 import MaterielForm from './children/MaterielForm';
 import MaterielTable from './children/MaterielTable';
-import MaterielDetail from './children/MaterielDetail';
 import {requireMaterielList} from '../../store/modules/materiel';
 
 class Materiel extends Component{
@@ -16,8 +15,6 @@ class Materiel extends Component{
             prjid:'',
             custpo:'',
             custno:'',
-            pageNo:1,
-            pageSize:10,
             detailIndex:0,
         }
     }
@@ -45,25 +42,13 @@ class Materiel extends Component{
                 return false;
             }
         })
-        this.props.getMaterielList({pageNo,pageSize},params)
+        this.props.getMaterielList(params)
     }
 
     setParam = (key,value) => {
         this.setState({
             [key]:value
         })
-    }
-
-    loadMore = () => {
-        let {pageNo} = this.state;
-        let {data,pages} = this.props.materielList
-        if (pageNo < pages){
-            this.setState({
-                pageNo:++pageNo
-            },()=>{
-                this.search(data)
-            })
-        }
     }
 
     setDetailIndex = (index) => {
@@ -86,8 +71,8 @@ class Materiel extends Component{
             <ScrollView stickyHeaderIndices={[0]} bounces={false}>
                 <Header title={'工程單物料需求'}  />
                 <MaterielForm prjid={prjid} custno={custno} custpo={custpo} search={this.search} setParam={this.setParam} setValue={this.setValue} />
-                <MaterielTable data={materielList.data} loadMore={this.loadMore} index={detailIndex} setDetailIndex={this.setDetailIndex} />
-                <MaterielDetail list={materielList.length?materielList[detailIndex].poInspdetailList:[]} />
+                <MaterielTable data={materielList} index={detailIndex} setDetailIndex={this.setDetailIndex} />
+                {/*<MaterielDetail list={materielList.length?materielList[detailIndex].vmap:[]} />*/}
             </ScrollView>
         )
     }
@@ -102,8 +87,8 @@ const mapStateToProps = (state) => ({
     materielList: state.materiel.materielList
 })
 const mapDispatchToProps = (dispatch) => ({
-    getMaterielList(query,params){
-        let action = requireMaterielList(query,params);
+    getMaterielList(params){
+        let action = requireMaterielList(params);
         dispatch(action)
     }
 })

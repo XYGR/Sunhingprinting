@@ -4,6 +4,20 @@ import {StyleSheet, View, Text} from 'react-native';
 const OrderDetail = (props) => {
 
     let {style ={},data = {}} =props
+
+    let format = (input) => {
+        if (input === null){
+            return ''
+        }
+        if (input <= 999){
+            return input - parseInt(input) > 0?input:parseInt(input);
+        }
+        let n = parseFloat(input).toFixed(2);
+        let re = /(\d{1,3})(?=(\d{3})+(?:\.))/g;
+        let res = n.replace(re, "$1,");
+        return res.slice(0,res.length - 3);
+    }
+
     return (
         <View style={[styles.orderDetail,style]}>
             <View style={styles.orderDetailCell}>
@@ -28,11 +42,11 @@ const OrderDetail = (props) => {
             </View>
             <View style={styles.orderDetailCell}>
                 <Text style={styles.orderDetailName}>訂單數</Text>
-                <Text style={styles.orderDetailValue}>{data.orderqty}</Text>
+                <Text style={styles.orderDetailValue}>{format(data.orderqty)}</Text>
             </View>
             <View style={styles.orderDetailCell}>
                 <Text style={styles.orderDetailName}>入庫數</Text>
-                <Text style={styles.orderDetailValue}>{data.madeqty}</Text>
+                <Text style={styles.orderDetailValue}>{format(data.madeqty)}</Text>
             </View>
             <View style={styles.orderDetailCell}>
                 <Text style={styles.orderDetailName}>交貨期</Text>

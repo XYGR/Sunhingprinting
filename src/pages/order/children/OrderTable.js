@@ -60,12 +60,12 @@ const OrderTable = (props) => {
     }
 
     let format = (input) => {
+        if (input <= 999){
+            return input;
+        }
         let n = parseFloat(input).toFixed(2);
-
         let re = /(\d{1,3})(?=(\d{3})+(?:\.))/g;
-
         let res = n.replace(re, "$1,");
-
         return res.slice(0,res.length - 3);
     }
 

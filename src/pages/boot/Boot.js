@@ -18,7 +18,6 @@ class Boot extends Component{
 
     componentDidMount = async() => {
         const token = await AsyncStorage.getItem('token');
-        console.log('token:'+token)
         if (token === null){
             this.props.navigation.replace('login');
         }else{

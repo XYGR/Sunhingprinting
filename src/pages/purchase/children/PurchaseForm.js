@@ -25,7 +25,7 @@ class PurchaseForm extends Component {
     }
 
     setType = (itemValue,index) => {
-        console.log(itemValue)
+
         this.setState({
             type:itemValue,
             typeIndex:index
@@ -56,7 +56,7 @@ class PurchaseForm extends Component {
     search = () => {
         let {type,vname,description,startDate,endDate} = this.state;
         let params = {
-            vname,
+            venderno:vname,
             description,
             startDate,
             endDate,

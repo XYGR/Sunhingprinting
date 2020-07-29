@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {ScrollView, View} from 'react-native';
-import {connect} from 'react-redux'
+import {connect} from 'react-redux';
 
 import Header from '../../conments/Header';
 import ProduceForm from './children/ProduceForm';
@@ -8,7 +8,7 @@ import ProduceDetail from './children/ProduceDetail';
 import ProduceTable from './children/ProduceTable';
 import {requireProduceList} from '../../store/modules/produce';
 
-class Produce extends Component{
+class Produce extends Component {
 
     constructor(props) {
         super(props);
@@ -17,7 +17,7 @@ class Produce extends Component{
             custpo:'',
             custno:'',
             pageNo:1,
-            pageSize:10,
+            pageSize:1,
             choiceIndex:0,
             scrollEnabled:true
         }
@@ -46,8 +46,7 @@ class Produce extends Component{
                 return false;
             }
         })
-        let {data} = this.props.produceList;
-        this.props.getProduceList({pageNo,pageSize},params,data)
+        this.props.getProduceList({pageNo,pageSize},params)
     }
 
     reset = () => {
@@ -56,7 +55,7 @@ class Produce extends Component{
             custpo:'',
             custno:'',
             pageNo:1,
-            pageSize:10,
+            pageSize:1,
             choiceIndex:0
         })
     }
@@ -67,22 +66,27 @@ class Produce extends Component{
         })
     }
 
-    loadMore = () => {
-        console.log('loadMore')
+    prePress = () => {
         let {pageNo} = this.state;
-        let {pages} = this.props.produceList
-        if (pageNo < pages){
-            this.setState({
-                pageNo:++pageNo
-            },()=>{
-                this.search()
-            })
-        }
+        this.setState({
+            pageNo:--pageNo
+        },()=>{
+            this.search()
+        })
+    }
+
+    nextPress = () => {
+        let {pageNo} = this.state;
+        this.setState({
+            pageNo:++pageNo
+        },()=>{
+            this.search()
+        })
     }
 
     render() {
-        let {prjid,custno,custpo,choiceIndex,scrollEnabled} = this.state;
-        let {data} = this.props.produceList
+        let {prjid,custno,custpo,scrollEnabled} = this.state;
+        let {data,prePage,nextPage} = this.props.produceList
         return (
             <View onStartShouldSetResponderCapture={() => {
                 this.setState({ scrollEnabled: true });
@@ -90,12 +94,14 @@ class Produce extends Component{
                 <ScrollView stickyHeaderIndices={[0]} bounces={false} scrollEnabled={scrollEnabled}>
                     <Header title={'生產進度查詢'}  />
                     <ProduceForm prjid={prjid} custno={custno} custpo={custpo} setValue={this.setValue} search={this.search} reset={this.reset} />
-                    <ProduceDetail data={data[choiceIndex]?data[choiceIndex]:null} />
+                    <ProduceDetail data={data[0]} />
                     <ProduceTable
-                        data={data}
-                        changeIndex={(index)=>{this.setState({choiceIndex:index})}}
-                        index={choiceIndex}
-                        loadMore={this.loadMore}
+                        data={data[0]?data[0].joList:[]}
+                        prePage={prePage}
+                        nextPage={nextPage}
+                        prjid={data[0]?data[0].prjid:''}
+                        prePress={this.prePress}
+                        nextPress={this.nextPress}
                         enableScroll={()=>{this.setState({scrollEnabled:false})}}
                     />
                 </ScrollView>
@@ -116,4 +122,4 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(Produce)
+export default connect(mapStateToProps, mapDispatchToProps)(Produce);

@@ -25,18 +25,15 @@ class Search extends Component {
     }
 
     componentDidMount(): void {
-        console.log(`当前运行环境:${Platform.OS}`)
         if (Platform.OS === 'android'){
             this.setState({
                 statusBarHeight:StatusBar.currentHeight
             })
-            console.log(`状态栏高度:${StatusBar.currentHeight}`);
         }else{
             NativeModules.StatusBarManager.getHeight(barHeight => {
                 this.setState({
                     statusBarHeight:barHeight.height
                 })
-                console.log(`状态栏高度:${barHeight.height}`);
             });
         }
     }

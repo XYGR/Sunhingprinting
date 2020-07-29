@@ -5,7 +5,6 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 const ImagePreview = (props) => {
 
     let {visible = false,imageUrl = [],close} = props
-    console.log()
     return (
         <Modal transparent={true} visible={visible} >
             <ImageViewer

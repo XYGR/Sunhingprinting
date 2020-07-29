@@ -1,20 +1,18 @@
-import React,{useState} from 'react';
+import React from 'react';
 import { View, StyleSheet, Text, TouchableOpacity,FlatList } from 'react-native';
 import { Actions } from 'react-native-router-flux'
 
 const ProduceTable = (props) => {
 
-    let { data, changeIndex, index = 0, loadMore, enableScroll} = props;
+    let { data,enableScroll,prjid = '',prePage,nextPage,prePress,nextPress} = props;
 
     let toMateriel = () => {
-        Actions.materiel({ prjid: data[index].prjid })
+        Actions.materiel({prjid})
     }
 
-    const [canLoadMore,setCanLoadMore] = useState(false)
-
-    let renderProduceList = (item) => {
+    let renderProduceList = (item,index) => {
         return (
-            <TouchableOpacity onPress={() => { changeIndex(index) }} key={index} style={{ flexDirection: 'row' }}>
+            <View key={index} style={{ flexDirection: 'row' }}>
                 <View style={[styles.produceTableCellItem, { width: 110,borderLeftWidth: 1 }]} >
                     <Text style={{ fontSize: 10, color: '#333' }}>{item.item.wpdesciption}</Text>
                 </View>
@@ -24,17 +22,20 @@ const ProduceTable = (props) => {
                 <View style={[styles.produceTableCellItem, { flex: 1, backgroundColor: '#91E9BD' }]} >
                     <Text style={{ fontSize: 10, color: '#333' }}>{format(item.item.doneqty)}</Text>
                 </View>
-                <View style={[styles.produceTableCellItem, { flex: 1,color: item.item.resqty >= 0 ? '#333' : '#F00' }]} >
-                    <Text style={{ fontSize: 10, color: 'red' }}>{format(item.item.resqty)}</Text>
+                <View style={[styles.produceTableCellItem, { flex: 1,backgroundColor: item.item.resqty >= 0 ?'#F48382':'#FFF' }]} >
+                    <Text style={{ fontSize: 10, color: item.item.resqty >= 0 ? '#333' : '#F00' }}>{format(item.item.resqty)}</Text>
                 </View>
                 <View style={[styles.produceTableCellItem, { flex: 1 }]} >
                     <Text style={{ fontSize: 10, color: item.item.resqty >= 0 ? '#333' : '#F00' }}>{item.item.resqty >= 0 ? '達標' : '未達標'}</Text>
                 </View>
-            </TouchableOpacity>
+            </View>
         )
     }
 
     let format = (input) => {
+        if (input <= 999){
+            return input;
+        }
         let n = parseFloat(input).toFixed(2);
         let re = /(\d{1,3})(?=(\d{3})+(?:\.))/g;
         let res = n.replace(re, "$1,");
@@ -55,7 +56,7 @@ const ProduceTable = (props) => {
                         <View style={[styles.produceTableHeaderItem, { flex: 1, backgroundColor: '#91E9BD' }]} >
                             <Text style={{ fontSize: 12, color: '#333' }}>完成數</Text>
                         </View>
-                        <View style={[styles.produceTableHeaderItem, { flex: 1}]} >
+                        <View style={[styles.produceTableHeaderItem, { flex: 1, backgroundColor: '#F48382' }]} >
                             <Text style={{ fontSize: 12, color: '#333' }}>{`多余數\n /欠數`}</Text>
                         </View>
                         <View style={[styles.produceTableHeaderItem, { flex: 1}]} >
@@ -63,7 +64,7 @@ const ProduceTable = (props) => {
                         </View>
                     </View>
                     <View
-                        style={{ height:200}}
+                        style={{ maxHeight:300}}
                         onStartShouldSetResponderCapture={enableScroll}>
                         <FlatList
                             data={data}
@@ -72,25 +73,33 @@ const ProduceTable = (props) => {
                             showsHorizontalScrollIndicator={false}
                             bounces={false}
                             horizontal={false}
-                            onEndReached={() => {
-                                setTimeout(() => {
-                                    if (canLoadMore) {
-                                        loadMore()
-                                        setCanLoadMore(false)
-                                    }
-                                }, 100)
+                            ListFooterComponent={()=>{
+                                return (
+                                    <View style={{ flexDirection: 'row',justifyContent:'center' }}>
+                                        <Text>已加载全部</Text>
+                                    </View>
+                                )
                             }}
-                            onEndReachedThreshold={0.5}
-                            onMomentumScrollBegin={() => {
-                                setCanLoadMore(true)
+                            ListEmptyComponent={()=>{
+                                return (
+                                    <View style={{ flexDirection: 'row',justifyContent:'center' }}>
+                                        <Text>暂无数据</Text>
+                                    </View>
+                                )
                             }}
                         />
                     </View>
                 </View>
             </View>
-            <View style={{ flexDirection: 'row', marginTop: 10,justifyContent:"center" }}>
+            <View style={{ flexDirection: 'row', marginTop: 10,justifyContent:'space-between' }}>
+                <TouchableOpacity disabled={prePage === 0} onPress={prePress} style={[styles.produceTableMenu, { width: 80, marginLeft: 8, marginRight: 8 }]}>
+                    <Text style={{ fontSize: 13, color: '#333' }}>上一页</Text>
+                </TouchableOpacity>
                 <TouchableOpacity onPress={toMateriel} style={[styles.produceTableMenu, { width: 195, marginLeft: 8, marginRight: 8 }]}>
                     <Text style={{ fontSize: 13, color: '#333' }}>工程單物料需求</Text>
+                </TouchableOpacity>
+                <TouchableOpacity disabled={nextPage === 0} onPress={nextPress} style={[styles.produceTableMenu, { width: 80, marginLeft: 8, marginRight: 8 }]}>
+                    <Text style={{ fontSize: 13, color: '#333' }}>下一页</Text>
                 </TouchableOpacity>
             </View>
         </View>

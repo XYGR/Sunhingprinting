@@ -6,12 +6,12 @@ const PurchaseDetail = (props) => {
     let {list = [],description = ''} = props
 
     let format = (input) => {
+        if (input <= 999){
+            return input;
+        }
         let n = parseFloat(input).toFixed(2);
-
         let re = /(\d{1,3})(?=(\d{3})+(?:\.))/g;
-
         let res = n.replace(re, "$1,");
-
         return res.slice(0,res.length - 3);
     }
 
@@ -27,9 +27,6 @@ const PurchaseDetail = (props) => {
                 <View style={styles.materielDetailItem}>
                     <Text style={styles.materielDetailItemText}>已交貨數</Text>
                 </View>
-                <View style={styles.materielDetailItem}>
-                    <Text style={styles.materielDetailItemText}>未交貨數</Text>
-                </View>
             </View>
             {
                 list.map((item,index) => {
@@ -39,13 +36,10 @@ const PurchaseDetail = (props) => {
                                 <Text style={styles.materielDetailItemText}>{item.inspno}</Text>
                             </View>
                             <View style={styles.materielDetailItem}>
-                                <Text style={styles.materielDetailItemText}>{item.prodDate}</Text>
+                                <Text style={styles.materielDetailItemText}>{item.inspdate}</Text>
                             </View>
                             <View style={styles.materielDetailItem}>
                                 <Text style={styles.materielDetailItemText}>{format(item.inspqty)}</Text>
-                            </View>
-                            <View style={styles.materielDetailItem}>
-                                <Text style={[styles.materielDetailItemText,{color: 'red'}]}>{format(item.inspqty - item.secqty)}</Text>
                             </View>
                         </View>
                     )

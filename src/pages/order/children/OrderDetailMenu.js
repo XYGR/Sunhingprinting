@@ -8,12 +8,16 @@ import {
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import ImagePreview from '../../../conments/ImagePreview';
+import PdfPreview from '../../../conments/PdfPreview';
+import Toast from 'react-native-root-toast';
 
 const OrderDetailMenu = (props) => {
     let {style ={},next,index,total,data,exit} = props;
 
     const [imagePreviewVisible,setImagePreviewVisible] = useState(false);
-    const [imageUrl,setImageUrl] = useState([])
+    const [imageUrl,setImageUrl] = useState([]);
+    const [pdfPreviewVisible,setPdfPreviewVisible] = useState(false);
+    const [pdfUrl,setPdfUrl] = useState('')
 
     let toProduce = () => {
         exit()
@@ -25,21 +29,34 @@ const OrderDetailMenu = (props) => {
         if (data.productpic !== null){
             url = data.productpic.slice(3)
         }else {
-            url = 'notfind.jpg'
+            // url = 'notfind.jpg'
+            Toast.show('未找到该文件', {
+                duration: Toast.durations.SHORT, // toast显示时长
+                position: Toast.positions.CENTER, // toast位置
+                delay: 0, // toast显示的延时
+            });
+            return false;
         }
-        setImageUrl([{url:`https://app.sunhingprinting.com/files/${url}`}])
+        setImageUrl([{url:`https://app.sunhingprinting.com/files/${encodeURIComponent(url)}`}])
         setImagePreviewVisible(true)
     }
 
     let previewPdf = () => {
-        let path,path1,url;
-        console.log(data.productpic);
-        console.log(data.pdffile);
-        path = encodeURIComponent(`${data.pdffile}`);
-        path1 = encodeURIComponent(`${data.productpic}`);
-        url = `https://app.sunhingprinting.com/printing/user/syRightuser/manage/savetpW?path=${path}&path1=${path1}`;
-        setImageUrl([{url}])
-        setImagePreviewVisible(true)
+        let path;
+        if (data.pdffile !== null){
+            path = data.pdffile.slice(3);
+        }else {
+            Toast.show('未找到该文件', {
+                duration: Toast.durations.SHORT, // toast显示时长
+                position: Toast.positions.CENTER, // toast位置
+                delay: 0, // toast显示的延时
+            });
+            return false;
+        }
+
+        let url = `https://app.sunhingprinting.com/files/${encodeURIComponent(path)}`;
+        setPdfUrl(url);
+        setPdfPreviewVisible(true)
     }
 
     return (
@@ -64,6 +81,7 @@ const OrderDetailMenu = (props) => {
                 <Text style={styles.orderDetailMenuItemText}>退出</Text>
             </TouchableOpacity>
             <ImagePreview visible={imagePreviewVisible} imageUrl={imageUrl} close={()=>{setImagePreviewVisible(false)}} />
+            <PdfPreview visible={pdfPreviewVisible} url={pdfUrl} close={()=>{setPdfPreviewVisible(false)}} />
         </View>
     )
 }

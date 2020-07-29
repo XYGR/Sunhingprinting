@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Feather';
 
 const MaterielTable = (props) => {
 
-    let {data = [],style = {},loadMore,index,setDetailIndex} = props;
+    let {data = [],style = {},index,setDetailIndex} = props;
     let renderOrderList = (item) => {
         let type = {
             '01':'咭紙',
@@ -28,23 +28,23 @@ const MaterielTable = (props) => {
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
                     <Text style={{fontSize:12,color:'#333'}}>{item.item.partno}</Text>
                 </View>
-                <View style={[styles.orderTabLeftItem,{height:50,paddingLeft:4,paddingRight:4}]}>
-                    <Text style={{fontSize:12,color:'#333'}}>{item.item.name}</Text>
+                <View style={[styles.orderTabLeftItem,{height:50}]}>
+                    <Text style={{fontSize:12,color:'#333'}}>{item.item.name1}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
                     <Text style={{fontSize:12,color:'#333'}}>{format(item.item.todoqty)}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
-                    <Text style={{fontSize:12,color:'#333'}}>{format(item.item.doneqty)}</Text>
+                    <Text style={{fontSize:12,color:'#333'}}>{format(item.item.donedqty)}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
                     <Text style={{fontSize:12,color:'#333'}}>{format(item.item.paperdoneqty)}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
-                    <Text style={{fontSize:12,color:'#333'}}>{item.item.custpo}</Text>
+                    <Text style={{fontSize:12,color:'#333'}}>{item.item.pono}</Text>
                 </View>
-                <View style={[styles.orderTabLeftItem,{height:30}]}>
-                    <Text style={{fontSize:12,color:'#333'}}>{item.item.vname}</Text>
+                <View style={[styles.orderTabLeftItem,{height:50}]}>
+                    <Text style={{fontSize:12,color:'#333'}}>{item.item.vendorno}</Text>
                 </View>
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
                     <Text style={{fontSize:12,color:'#333'}}>{format(item.item.purqty)}</Text>
@@ -61,28 +61,31 @@ const MaterielTable = (props) => {
                 <View style={[styles.orderTabLeftItem,{height:30}]}>
                     <Text style={{fontSize:12,color:'#333'}}>{item.item.plandate}</Text>
                 </View>
-                <TouchableOpacity onPress={()=>{setDetailIndex(item.index)}} style={[styles.orderTabLeftItem,{height:30}]}>
-                    {
-                        item.index === index?
-                            <Icon name={'chevrons-down'} size={20} color={'#F1761B'} />:
-                            <Icon name={'chevrons-up'} size={20} color={'#333'} />
-                    }
-                </TouchableOpacity>
+                {/*<TouchableOpacity onPress={()=>{setDetailIndex(item.index)}} style={[styles.orderTabLeftItem,{height:30}]}>*/}
+                {/*    {*/}
+                {/*        item.index === index?*/}
+                {/*            <Icon name={'chevrons-down'} size={20} color={'#F1761B'} />:*/}
+                {/*            <Icon name={'chevrons-up'} size={20} color={'#333'} />*/}
+                {/*    }*/}
+                {/*</TouchableOpacity>*/}
             </View>
         )
     }
 
     let format = (input) => {
+        if (input === null){
+            return ''
+        }
+        if (input <= 999){
+            return input - parseInt(input) > 0?input:parseInt(input);
+        }
         let n = parseFloat(input).toFixed(2);
-
         let re = /(\d{1,3})(?=(\d{3})+(?:\.))/g;
-
         let res = n.replace(re, "$1,");
-
         return res.slice(0,res.length - 3);
     }
 
-    let tabHeader = ['工程單','類別','序號','物料','定量','已切數','計劃數','PONO','供應商','訂單數','已收貨數','未交貨數','下單日期','預交日期','收貨明细']
+    let tabHeader = ['工程單','類別','序號','物料','定量','已切數','計劃數','PONO','供應商','訂單數','已收貨數','未交貨數','下單日期','預交日期']
 
     return (
         <View style={[styles.materielTable,style]}>
@@ -90,7 +93,7 @@ const MaterielTable = (props) => {
                 {
                     tabHeader.map((item,index) => {
                         return (
-                            <View key={index} style={[styles.orderTabLeftItem,{height:index === 3?50:30,borderTopWidth:index ===0?1:0}]}>
+                            <View key={index} style={[styles.orderTabLeftItem,{height:index === 3||index === 8?50:30,borderTopWidth:index ===0?1:0}]}>
                                 <Text style={{fontSize:12,color:'#333'}}>{item}</Text>
                             </View>
                         )
@@ -104,8 +107,6 @@ const MaterielTable = (props) => {
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 bounces={false}
-                onEndReached={loadMore}
-                onEndReachedThreshold={0.2}
             />
         </View>
     )
