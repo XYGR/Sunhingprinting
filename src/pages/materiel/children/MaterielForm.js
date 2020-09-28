@@ -4,14 +4,9 @@ import Search from '../../../conments/Search';
 
 const MaterielForm = (props) => {
 
-    let {prjid,custno,custpo,setValue,setParam,search} = props;
+    let {prjid,custpo,setValue,setParam,search} = props;
 
     const [searchVisible,setSearchVisible] = useState(false)
-
-    let setCustno = (value) => {
-        setSearchVisible(false)
-        setParam('custno',value)
-    }
 
     return (
         <View style={styles.formWarp}>
@@ -81,7 +76,7 @@ const MaterielForm = (props) => {
                     <Text style={{fontSize:13,color:'#333'}}>搜索</Text>
                 </TouchableOpacity>
             </View>
-            <Search visible={searchVisible} setValue={setCustno} close={() => setSearchVisible(false)} />
+            {/*<Search visible={searchVisible} setValue={setCustno} close={() => setSearchVisible(false)} />*/}
         </View>
     )
 

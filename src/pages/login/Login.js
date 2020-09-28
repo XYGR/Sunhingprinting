@@ -71,7 +71,7 @@ class Login extends Component {
                     <View style={styles.loginFormCell}>
                         <Icon name="user" size={26} color="#333" />
                         <TextInput
-                            style={{flex:1,height: 40,fontSize:14,marginLeft:10,textAlignVertical:"center",padding:0}}
+                            style={{flex:1,height: 40,fontSize:14,marginLeft:10,textAlignVertical:"center",padding:0,color: '#333'}}
                             placeholder={'用戶代號'}
                             onChangeText={(text => {this.setState({userNo:text})})}
                             autoCapitalize={'none'}

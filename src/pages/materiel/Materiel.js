@@ -29,10 +29,9 @@ class Materiel extends Component{
     }
 
     search = () => {
-        let {prjid,custno,custpo,pageNo,pageSize} = this.state;
+        let {prjid,custpo,pageNo,pageSize} = this.state;
         let params = {
             prjid,
-            custno,
             custpo,
         }
         let keys = Object.keys(params);

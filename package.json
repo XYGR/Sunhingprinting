@@ -5,6 +5,7 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios --simulator 'iPhone 8'",
+    "build:ios": "react-native bundle --entry-file index.js --bundle-output ./ios/bundle/index.ios.jsbundle --platform ios --assets-dest ./ios/bundle --dev false",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint ."
